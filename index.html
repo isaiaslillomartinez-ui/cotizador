@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cotizador Eléctrico — ID LILLO SpA</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:   #0d1b2a;
+    --navy2:  #162033;
+    --blue:   #1e4fa3;
+    --accent: #f5a623;
+    --teal:   #00c9b1;
+    --light:  #e8edf5;
+    --muted:  #8494aa;
+    --white:  #ffffff;
+    --red:    #e84040;
+    --green:  #27ae60;
+    --card:   #19293d;
+    --border: rgba(255,255,255,0.07);
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--light);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, var(--navy2) 0%, #0a1520 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+  .logo-box {
+    width: 52px; height: 52px;
+    background: var(--blue);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 18px;
+    color: white; letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+  .header-info h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px; font-weight: 800;
+    color: var(--white); letter-spacing: -0.5px;
+  }
+  .header-info p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .header-right {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .badge {
+    background: rgba(245,166,35,0.15);
+    border: 1px solid rgba(245,166,35,0.35);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    padding: 5px 12px; border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .btn-print {
+    background: var(--blue);
+    color: white; border: none;
+    padding: 9px 20px; border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-print:hover { background: #2560c4; transform: translateY(-1px); }
+
+  /* ─── LAYOUT ─── */
+  .app {
+    max-width: 1360px; margin: 0 auto;
+    padding: 36px 32px;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 28px;
+  }
+  .col-left { display: flex; flex-direction: column; gap: 24px; }
+  .col-right { display: flex; flex-direction: column; gap: 24px; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 18px 22px;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-header .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700; color: white;
+    flex-shrink: 0;
+  }
+  .card-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--white); letter-spacing: 0.2px;
+  }
+  .card-header .card-subtotal {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px; font-weight: 500;
+    color: var(--teal);
+  }
+  .card-body { padding: 20px 22px; }
+
+  /* ─── DATOS PROYECTO ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .field label {
+    display: block;
+    font-size: 11px; font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 9px 13px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: var(--blue);
+  }
+  .field select option { background: var(--navy2); color: var(--white); }
+  .field textarea { resize: vertical; min-height: 68px; }
+
+  /* ─── TABLA ÍTEMS ─── */
+  .items-table { width: 100%; border-collapse: collapse; }
+  .items-table thead tr th {
+    font-size: 10px; font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .items-table tbody tr { transition: background .15s; }
+  .items-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+  .items-table tbody td {
+    padding: 7px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: middle;
+  }
+  .items-table tbody td input, .items-table tbody td select {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 6px 8px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .items-table tbody td input:focus, .items-table tbody td select:focus {
+    border-color: var(--blue);
+  }
+  .items-table tbody td input[type="text"] {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+  }
+  .td-total {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; color: var(--teal);
+    text-align: right; white-space: nowrap;
+    min-width: 90px;
+  }
+  .td-del button {
+    background: none; border: none;
+    color: var(--muted); cursor: pointer;
+    font-size: 16px; padding: 2px 4px;
+    border-radius: 4px;
+    transition: color .2s;
+  }
+  .td-del button:hover { color: var(--red); }
+  .add-row-btn {
+    margin-top: 12px;
+    background: rgba(30,79,163,0.15);
+    border: 1px dashed rgba(30,79,163,0.5);
+    color: var(--blue);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    padding: 8px 16px; border-radius: 8px;
+    cursor: pointer; transition: all .2s;
+    width: 100%;
+  }
+  .add-row-btn:hover {
+    background: rgba(30,79,163,0.25);
+    border-color: var(--blue);
+  }
+
+  /* ─── SECCIÓN MANO DE OBRA ─── */
+  .mdo-table { width: 100%; border-collapse: collapse; }
+  .mdo-table thead th {
+    font-size: 10px; font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 8px 10px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .mdo-table tbody td {
+    padding: 7px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: middle;
+  }
+  .mdo-table tbody td input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 6px 8px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .mdo-table tbody td input[type="text"] {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+  }
+  .mdo-table tbody td input:focus { border-color: var(--blue); }
+
+  /* ─── INSUMOS ─── */
+  .insumos-row {
+    display: flex; align-items: center;
+    gap: 14px; padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .insumos-row:last-child { border-bottom: none; }
+  .insumos-row label {
+    font-size: 13px; color: var(--light);
+    flex: 1;
+  }
+  .insumos-row input {
+    width: 150px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 8px 12px;
+    outline: none;
+    transition: border-color .2s;
+    text-align: right;
+  }
+  .insumos-row input:focus { border-color: var(--blue); }
+  .insumos-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; color: var(--teal);
+    min-width: 90px; text-align: right;
+  }
+
+  /* ─── RESUMEN (derecha) ─── */
+  .resumen-card {
+    background: linear-gradient(160deg, #162033 0%, #0d1b2a 100%);
+    border: 1px solid rgba(30,79,163,0.35);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: sticky; top: 110px;
+  }
+  .resumen-header {
+    padding: 18px 22px;
+    background: var(--blue);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .resumen-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+    color: white; letter-spacing: 0.5px;
+  }
+  .resumen-body { padding: 20px; }
+  .resumen-line {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .resumen-line:last-child { border-bottom: none; }
+  .resumen-line .label { color: var(--muted); }
+  .resumen-line .val {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; color: var(--white);
+  }
+  .resumen-line.total-neto .label { color: var(--light); font-weight: 600; }
+  .resumen-line.total-neto .val { color: var(--accent); font-size: 15px; font-weight: 700; }
+  .resumen-line.iva .label { color: var(--muted); }
+  .resumen-line.total-final {
+    background: rgba(30,79,163,0.15);
+    border-radius: 8px; padding: 14px;
+    margin-top: 8px; border: none;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .resumen-line.total-final .label {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px; font-weight: 700;
+    color: var(--muted); letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .resumen-line.total-final .val {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px; font-weight: 800;
+    color: var(--teal);
+  }
+
+  /* porcentajes de distribución */
+  .dist-bars { margin-top: 16px; }
+  .dist-bars h3 {
+    font-size: 11px; font-weight: 600;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 12px;
+  }
+  .dist-row { margin-bottom: 10px; }
+  .dist-row-top {
+    display: flex; justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .dist-row-top span:first-child { font-size: 12px; color: var(--light); }
+  .dist-row-top span:last-child {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--muted);
+  }
+  .bar-track {
+    height: 5px; background: rgba(255,255,255,0.07);
+    border-radius: 3px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width .4s ease;
+  }
+
+  /* condiciones comerciales */
+  .cond-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+  .cond-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px;
+  }
+  .cond-item .ci-label {
+    font-size: 10px; font-weight: 600;
+    color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 4px;
+  }
+  .cond-item .ci-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* toggle IVA */
+  .iva-toggle {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .iva-toggle label { font-size: 13px; color: var(--light); cursor: pointer; }
+  .switch {
+    position: relative; width: 40px; height: 22px; flex-shrink: 0;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 22px; cursor: pointer;
+    transition: background .2s;
+  }
+  .slider::before {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    left: 3px; top: 3px;
+    background: white; border-radius: 50%;
+    transition: transform .2s;
+  }
+  .switch input:checked + .slider { background: var(--teal); }
+  .switch input:checked + .slider::before { transform: translateX(18px); }
+
+  /* botones acción */
+  .action-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .btn-main {
+    background: var(--blue);
+    color: white; border: none;
+    padding: 13px; border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all .2s;
+    text-align: center; letter-spacing: 0.3px;
+  }
+  .btn-main:hover { background: #2560c4; transform: translateY(-1px); }
+  .btn-sec {
+    background: rgba(255,255,255,0.05);
+    color: var(--light); border: 1px solid var(--border);
+    padding: 11px; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all .2s;
+    text-align: center;
+  }
+  .btn-sec:hover { background: rgba(255,255,255,0.09); }
+
+  /* ─── N° COTIZACIÓN ─── */
+  .quote-meta {
+    display: flex; gap: 14px; align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .quote-meta .field { flex: 1; min-width: 140px; }
+
+  /* ─── PRINT STYLES ─── */
+  @media print {
+    body { background: white !important; color: #0d1b2a !important; }
+    header { position: static; background: #0d1b2a !important; }
+    .col-right { display: none; }
+    .app { grid-template-columns: 1fr; }
+    .btn-print, .add-row-btn, .action-btns, .td-del { display: none !important; }
+    .card { background: #f8fafc !important; border: 1px solid #dde3ec !important; }
+    .card-header { background: #0d1b2a !important; }
+    .card-header h2, .step-num { color: white !important; }
+    .items-table tbody td input,
+    .mdo-table tbody td input,
+    .field input, .field select, .field textarea {
+      background: transparent !important;
+      border: 1px solid #dde3ec !important;
+      color: #0d1b2a !important;
+    }
+    .td-total, .card-header .card-subtotal { color: #1e4fa3 !important; }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1100px) {
+    .app { grid-template-columns: 1fr; }
+    .resumen-card { position: static; }
+    .col-right { flex-direction: row; flex-wrap: wrap; }
+    .resumen-card { flex: 1 1 340px; }
+  }
+  @media (max-width: 640px) {
+    header { padding: 18px 20px; }
+    .app { padding: 20px 16px; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .cond-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-box">IDL</div>
+  <div class="header-info">
+    <h1>ID LILLO SpA — Cotizador Eléctrico</h1>
+    <p>Ingeniería Eléctrica · Propuesta Técnica y Económica automatizada</p>
+  </div>
+  <div class="header-right">
+    <span class="badge" id="quoteNumBadge">N° IDL-120-2026</span>
+    <button class="btn-print" onclick="window.print()">🖨 Imprimir / PDF</button>
+  </div>
+</header>
+
+<div class="app">
+  <!-- ══════════════ COL IZQUIERDA ══════════════ -->
+  <div class="col-left">
+
+    <!-- ETAPA 0 — DATOS GENERALES -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">0</div>
+        <h2>Datos del Proyecto y Mandante</h2>
+      </div>
+      <div class="card-body">
+        <div class="quote-meta" style="margin-bottom:18px;">
+          <div class="field">
+            <label>N° Propuesta</label>
+            <input type="text" id="quoteNum" value="IDL-120-2026" oninput="updateBadge()">
+          </div>
+          <div class="field">
+            <label>Fecha</label>
+            <input type="date" id="quoteDate">
+          </div>
+          <div class="field">
+            <label>Vigencia</label>
+            <input type="text" id="quoteVig" value="15 días corridos desde emisión">
+          </div>
+        </div>
+        <div class="grid-2" style="margin-bottom:14px;">
+          <div class="field">
+            <label>Mandante (cliente)</label>
+            <input type="text" id="mandante" placeholder="Sra. Marlis Osorio Mödinger">
+          </div>
+          <div class="field">
+            <label>Dirección</label>
+            <input type="text" id="direccion" placeholder="8 Norte N°647 Casa 3, Viña del Mar">
+          </div>
+          <div class="field">
+            <label>Sistema</label>
+            <input type="text" id="sistema" value="Canaleta DLP sobrepuesta">
+          </div>
+          <div class="field">
+            <label>Superficie</label>
+            <input type="text" id="superficie" placeholder="250 m² — 2 pisos">
+          </div>
+          <div class="field">
+            <label>Empalme</label>
+            <input type="text" id="empalme" placeholder="Tipo A9 / 8,8 kW / 40 A">
+          </div>
+          <div class="field">
+            <label>Operarios</label>
+            <input type="text" id="operarios" value="3 personas">
+          </div>
+          <div class="field">
+            <label>Normativa</label>
+            <input type="text" id="normativa" value="Decreto 8 — RIC / SEC">
+          </div>
+          <div class="field">
+            <label>Rep. Técnico</label>
+            <input type="text" id="repTecnico" value="Ing. Dan Lillo Martínez">
+          </div>
+        </div>
+        <div class="field">
+          <label>Nota Técnica</label>
+          <textarea id="notaTecnica">Precio cerrado llave en mano. Canalización DLP libre de halógenos, 170 m lineales totales. Incluye gestión completa de empalme ante compañía eléctrica e instalación. Cualquier modificación fuera del alcance será evaluada e informada previamente al Mandante.</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ETAPA 1 — TABLERO -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">1</div>
+        <h2>Tablero de Distribución</h2>
+        <span class="card-subtotal" id="sub_tablero">$0</span>
+      </div>
+      <div class="card-body">
+        <table class="items-table" id="tbl_tablero">
+          <thead>
+            <tr>
+              <th style="width:36%">Ítem / Descripción</th>
+              <th style="width:8%">Cant.</th>
+              <th style="width:18%">Marca ref.</th>
+              <th style="width:16%">Precio Unit.</th>
+              <th style="width:14%">Total</th>
+              <th style="width:8%"></th>
+            </tr>
+          </thead>
+          <tbody id="body_tablero"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow('tablero')">+ Agregar ítem</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 2 — CANALIZACIONES -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">2</div>
+        <h2>Canalizaciones DLP</h2>
+        <span class="card-subtotal" id="sub_canal">$0</span>
+      </div>
+      <div class="card-body">
+        <table class="items-table" id="tbl_canal">
+          <thead>
+            <tr>
+              <th style="width:34%">Ítem / Descripción</th>
+              <th style="width:9%">Cant.</th>
+              <th style="width:10%">Unid.</th>
+              <th style="width:16%">Especif.</th>
+              <th style="width:16%">Precio Unit.</th>
+              <th style="width:11%">Total</th>
+              <th style="width:4%"></th>
+            </tr>
+          </thead>
+          <tbody id="body_canal"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRowCanal()">+ Agregar ítem</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 3 — CONDUCTORES -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">3</div>
+        <h2>Conductores H07Z1-K</h2>
+        <span class="card-subtotal" id="sub_cond">$0</span>
+      </div>
+      <div class="card-body">
+        <table class="items-table" id="tbl_cond">
+          <thead>
+            <tr>
+              <th style="width:36%">Ítem / Descripción</th>
+              <th style="width:9%">Cant.</th>
+              <th style="width:8%">Unid.</th>
+              <th style="width:16%">Marca ref.</th>
+              <th style="width:15%">Precio Unit.</th>
+              <th style="width:12%">Total</th>
+              <th style="width:4%"></th>
+            </tr>
+          </thead>
+          <tbody id="body_cond"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRowCond()">+ Agregar ítem</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 4 — ARTEFACTOS Y CAJAS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">4</div>
+        <h2>Artefactos y Cajas</h2>
+        <span class="card-subtotal" id="sub_artef">$0</span>
+      </div>
+      <div class="card-body">
+        <table class="items-table" id="tbl_artef">
+          <thead>
+            <tr>
+              <th style="width:36%">Ítem / Descripción</th>
+              <th style="width:8%">Cant.</th>
+              <th style="width:18%">Marca ref.</th>
+              <th style="width:16%">Precio Unit.</th>
+              <th style="width:14%">Total</th>
+              <th style="width:8%"></th>
+            </tr>
+          </thead>
+          <tbody id="body_artef"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow('artef')">+ Agregar ítem</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 5 — PAT + TRÁMITES SEC -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">5</div>
+        <h2>Puesta a Tierra (PAT) + Trámites SEC</h2>
+        <span class="card-subtotal" id="sub_pat">$0</span>
+      </div>
+      <div class="card-body">
+        <table class="items-table" id="tbl_pat">
+          <thead>
+            <tr>
+              <th style="width:36%">Ítem / Descripción</th>
+              <th style="width:8%">Cant.</th>
+              <th style="width:14%">Ref. EETT</th>
+              <th style="width:16%">Precio Unit.</th>
+              <th style="width:14%">Total</th>
+              <th style="width:12%"></th>
+            </tr>
+          </thead>
+          <tbody id="body_pat"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow('pat')">+ Agregar ítem</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 6 — GESTIÓN EMPALME -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">6</div>
+        <h2>Gestión de Empalme — Compañía Eléctrica</h2>
+        <span class="card-subtotal" id="sub_emp">$0</span>
+      </div>
+      <div class="card-body">
+        <table class="items-table" id="tbl_emp">
+          <thead>
+            <tr>
+              <th style="width:38%">Ítem / Descripción</th>
+              <th style="width:8%">Cant.</th>
+              <th style="width:14%">Referencia</th>
+              <th style="width:16%">Precio Unit.</th>
+              <th style="width:14%">Total</th>
+              <th style="width:10%"></th>
+            </tr>
+          </thead>
+          <tbody id="body_emp"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow('emp')">+ Agregar ítem</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 7 — MANO DE OBRA -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">7</div>
+        <h2>Mano de Obra</h2>
+        <span class="card-subtotal" id="sub_mdo">$0</span>
+      </div>
+      <div class="card-body">
+        <table class="mdo-table" id="tbl_mdo">
+          <thead>
+            <tr>
+              <th style="width:30%">Personal / Actividad</th>
+              <th style="width:8%">Días</th>
+              <th style="width:16%">Detalle</th>
+              <th style="width:16%">Precio/día</th>
+              <th style="width:14%">Total</th>
+              <th style="width:8%">Cant.</th>
+              <th style="width:8%"></th>
+            </tr>
+          </thead>
+          <tbody id="body_mdo"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRowMdo()">+ Agregar personal</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 8 — INSUMOS Y HERRAMIENTAS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">8</div>
+        <h2>Insumos, Herramientas y Traslados</h2>
+        <span class="card-subtotal" id="sub_ins">$0</span>
+      </div>
+      <div class="card-body">
+        <div class="insumos-row">
+          <label>Equipos técnicos y herramientas especializadas</label>
+          <input type="number" id="ins1" value="200000" oninput="recalcAll()" step="1000">
+          <span class="insumos-val" id="ins1_val">$200.000</span>
+        </div>
+        <div class="insumos-row">
+          <label>Insumos complementarios de ejecución (fungibles)</label>
+          <input type="number" id="ins2" value="150000" oninput="recalcAll()" step="1000">
+          <span class="insumos-val" id="ins2_val">$150.000</span>
+        </div>
+        <div class="insumos-row">
+          <label>Coordinaciones, traslados y viáticos</label>
+          <input type="number" id="ins3" value="163500" oninput="recalcAll()" step="1000">
+          <span class="insumos-val" id="ins3_val">$163.500</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONDICIONES COMERCIALES -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-num">★</div>
+        <h2>Condiciones Comerciales y Garantía</h2>
+      </div>
+      <div class="card-body">
+        <div class="cond-grid">
+          <div class="field">
+            <label>Forma de pago (% inicio)</label>
+            <input type="number" id="pagoInicio" value="70" min="0" max="100" oninput="updatePago()"> 
+          </div>
+          <div class="field">
+            <label>Plazo estimado (días hábiles)</label>
+            <input type="number" id="plazoHab" value="15">
+          </div>
+          <div class="field">
+            <label>Garantía (meses)</label>
+            <input type="number" id="garantia" value="12">
+          </div>
+          <div class="field">
+            <label>Banco transferencia</label>
+            <input type="text" id="banco" value="Banco Estado">
+          </div>
+          <div class="field">
+            <label>N° Cuenta vista</label>
+            <input type="text" id="cuenta" value="902-7-175299-6">
+          </div>
+          <div class="field">
+            <label>RUT empresa</label>
+            <input type="text" id="rutEmp" value="77.764.455-6">
+          </div>
+        </div>
+        <div class="cond-grid" style="margin-top:16px;" id="pagoCond">
+          <div class="cond-item">
+            <div class="ci-label">Anticipo (inicio)</div>
+            <div class="ci-val" id="ci_anticipo">70% — $0</div>
+          </div>
+          <div class="cond-item">
+            <div class="ci-label">Contra entrega</div>
+            <div class="ci-val" id="ci_entrega">30% — $0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /col-left -->
+
+  <!-- ══════════════ COL DERECHA ══════════════ -->
+  <div class="col-right">
+    <div class="resumen-card">
+      <div class="resumen-header">
+        <h2>📊 Resumen de Inversión</h2>
+      </div>
+      <div class="resumen-body">
+
+        <div class="resumen-line">
+          <span class="label">Tablero distribución</span>
+          <span class="val" id="r_tablero">$0</span>
+        </div>
+        <div class="resumen-line">
+          <span class="label">Canalizaciones DLP</span>
+          <span class="val" id="r_canal">$0</span>
+        </div>
+        <div class="resumen-line">
+          <span class="label">Conductores H07Z1-K</span>
+          <span class="val" id="r_cond">$0</span>
+        </div>
+        <div class="resumen-line">
+          <span class="label">Artefactos y cajas</span>
+          <span class="val" id="r_artef">$0</span>
+        </div>
+        <div class="resumen-line">
+          <span class="label">PAT + Trámites SEC</span>
+          <span class="val" id="r_pat">$0</span>
+        </div>
+        <div class="resumen-line">
+          <span class="label">Gestión empalme</span>
+          <span class="val" id="r_emp">$0</span>
+        </div>
+        <div class="resumen-line">
+          <span class="label">Mano de obra</span>
+          <span class="val" id="r_mdo">$0</span>
+        </div>
+        <div class="resumen-line">
+          <span class="label">Insumos / herramientas</span>
+          <span class="val" id="r_ins">$0</span>
+        </div>
+
+        <div class="resumen-line total-neto" style="margin-top:4px; border-top: 2px solid rgba(255,255,255,0.1); padding-top: 14px;">
+          <span class="label">TOTAL NETO</span>
+          <span class="val" id="r_neto">$0</span>
+        </div>
+
+        <div class="iva-toggle">
+          <label class="switch">
+            <input type="checkbox" id="ivaToggle" onchange="recalcAll()">
+            <span class="slider"></span>
+          </label>
+          <label for="ivaToggle">Aplicar IVA (19%)</label>
+        </div>
+
+        <div class="resumen-line iva" id="ivaLine" style="display:none">
+          <span class="label">IVA 19%</span>
+          <span class="val" id="r_iva">$0</span>
+        </div>
+
+        <div class="resumen-line total-final">
+          <span class="label">TOTAL FINAL</span>
+          <span class="val" id="r_total">$0</span>
+        </div>
+
+        <!-- barras distribución -->
+        <div class="dist-bars">
+          <h3>Distribución del costo</h3>
+          <div class="dist-row" id="bar_mat">
+            <div class="dist-row-top">
+              <span>Materiales</span>
+              <span id="pct_mat">0%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="background:#1e4fa3;width:0%;" id="bf_mat"></div></div>
+          </div>
+          <div class="dist-row" id="bar_mdo">
+            <div class="dist-row-top">
+              <span>Mano de obra</span>
+              <span id="pct_mdo">0%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="background:#f5a623;width:0%;" id="bf_mdo"></div></div>
+          </div>
+          <div class="dist-row" id="bar_ins">
+            <div class="dist-row-top">
+              <span>Insumos y herr.</span>
+              <span id="pct_ins">0%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="background:#00c9b1;width:0%;" id="bf_ins"></div></div>
+          </div>
+        </div>
+
+        <div class="action-btns">
+          <button class="btn-main" onclick="window.print()">🖨 Generar PDF / Imprimir</button>
+          <button class="btn-sec" onclick="resetAll()">↺ Limpiar cotización</button>
+          <button class="btn-sec" onclick="loadDefaults()">⬇ Cargar valores de referencia</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /col-right -->
+</div><!-- /app -->
+
+<script>
+/* ─── UTILIDADES ─── */
+const fmt = n => '$' + Math.round(n).toLocaleString('es-CL');
+const num = s => parseFloat(String(s).replace(/[^0-9.-]/g,'')) || 0;
+
+function updateBadge() {
+  const v = document.getElementById('quoteNum').value;
+  document.getElementById('quoteNumBadge').textContent = 'N° ' + v;
+}
+function updatePago() { recalcAll(); }
+
+/* ─── GENERAR FILAS ─── */
+function makeSimpleRow(id, desc='', cant=1, marca='', pu=0) {
+  const tr = document.createElement('tr');
+  const total = cant * pu;
+  tr.innerHTML = `
+    <td><input type="text" value="${desc}" oninput="recalcSection('${id}', this)"></td>
+    <td><input type="number" value="${cant}" min="0" style="width:56px" oninput="recalcSection('${id}', this)"></td>
+    <td><input type="text" value="${marca}" style="font-size:12px"></td>
+    <td><input type="number" value="${pu}" min="0" step="100" oninput="recalcSection('${id}', this)"></td>
+    <td class="td-total">${fmt(total)}</td>
+    <td class="td-del"><button onclick="delRow(this,'${id}')">✕</button></td>
+  `;
+  return tr;
+}
+
+function makeCanalRow(desc='', cant=1, unid='m', especif='Libre halóg.', pu=0) {
+  const tr = document.createElement('tr');
+  const total = cant * pu;
+  tr.innerHTML = `
+    <td><input type="text" value="${desc}" oninput="recalcCanal(this)"></td>
+    <td><input type="number" value="${cant}" min="0" style="width:52px" oninput="recalcCanal(this)"></td>
+    <td><input type="text" value="${unid}" style="width:44px;font-size:12px"></td>
+    <td><input type="text" value="${especif}" style="font-size:12px"></td>
+    <td><input type="number" value="${pu}" min="0" step="100" oninput="recalcCanal(this)"></td>
+    <td class="td-total">${fmt(total)}</td>
+    <td class="td-del"><button onclick="delRowCanal(this)">✕</button></td>
+  `;
+  return tr;
+}
+
+function makeCondRow(desc='', cant=1, unid='m', marca='', pu=0) {
+  const tr = document.createElement('tr');
+  const total = cant * pu;
+  tr.innerHTML = `
+    <td><input type="text" value="${desc}" oninput="recalcCond(this)"></td>
+    <td><input type="number" value="${cant}" min="0" style="width:52px" oninput="recalcCond(this)"></td>
+    <td><input type="text" value="${unid}" style="width:44px;font-size:12px"></td>
+    <td><input type="text" value="${marca}" style="font-size:12px"></td>
+    <td><input type="number" value="${pu}" min="0" step="10" oninput="recalcCond(this)"></td>
+    <td class="td-total">${fmt(total)}</td>
+    <td class="td-del"><button onclick="delRowCond(this)">✕</button></td>
+  `;
+  return tr;
+}
+
+function makeMdoRow(act='', dias=1, detalle='', precio=0, cant=1) {
+  const tr = document.createElement('tr');
+  const total = dias * precio * cant;
+  tr.innerHTML = `
+    <td><input type="text" value="${act}" oninput="recalcMdo(this)"></td>
+    <td><input type="number" value="${dias}" min="0" style="width:48px" oninput="recalcMdo(this)"></td>
+    <td><input type="text" value="${detalle}" style="font-size:12px"></td>
+    <td><input type="number" value="${precio}" min="0" step="1000" oninput="recalcMdo(this)"></td>
+    <td class="td-total">${fmt(total)}</td>
+    <td><input type="number" value="${cant}" min="1" style="width:44px" oninput="recalcMdo(this)"></td>
+    <td class="td-del"><button onclick="delRowMdo(this)">✕</button></td>
+  `;
+  return tr;
+}
+
+/* ─── ADD ROWS ─── */
+function addRow(id) {
+  document.getElementById('body_'+id).appendChild(makeSimpleRow(id));
+  recalcAll();
+}
+function addRowCanal() {
+  document.getElementById('body_canal').appendChild(makeCanalRow());
+  recalcAll();
+}
+function addRowCond() {
+  document.getElementById('body_cond').appendChild(makeCondRow());
+  recalcAll();
+}
+function addRowMdo() {
+  document.getElementById('body_mdo').appendChild(makeMdoRow());
+  recalcAll();
+}
+
+/* ─── DELETE ROWS ─── */
+function delRow(btn, id) { btn.closest('tr').remove(); recalcAll(); }
+function delRowCanal(btn) { btn.closest('tr').remove(); recalcAll(); }
+function delRowCond(btn) { btn.closest('tr').remove(); recalcAll(); }
+function delRowMdo(btn) { btn.closest('tr').remove(); recalcAll(); }
+
+/* ─── RECALC POR SECCIÓN ─── */
+function sumSimpleSection(bodyId) {
+  let s = 0;
+  document.querySelectorAll('#'+bodyId+' tr').forEach(tr => {
+    const inputs = tr.querySelectorAll('input[type="number"]');
+    if (inputs.length >= 2) {
+      const cant = num(inputs[0].value);
+      const pu   = num(inputs[inputs.length-1].value);
+      const tot  = cant * pu;
+      s += tot;
+      const td = tr.querySelector('.td-total');
+      if (td) td.textContent = fmt(tot);
+    }
+  });
+  return s;
+}
+
+function recalcSection(id) { recalcAll(); }
+
+function recalcCanal() { recalcAll(); }
+function recalcCond()  { recalcAll(); }
+
+function sumCanalSection() {
+  let s = 0;
+  document.querySelectorAll('#body_canal tr').forEach(tr => {
+    const ns = tr.querySelectorAll('input[type="number"]');
+    if (ns.length >= 2) {
+      const cant = num(ns[0].value), pu = num(ns[1].value);
+      const tot = cant * pu; s += tot;
+      const td = tr.querySelector('.td-total');
+      if (td) td.textContent = fmt(tot);
+    }
+  });
+  return s;
+}
+
+function sumCondSection() {
+  let s = 0;
+  document.querySelectorAll('#body_cond tr').forEach(tr => {
+    const ns = tr.querySelectorAll('input[type="number"]');
+    if (ns.length >= 2) {
+      const cant = num(ns[0].value), pu = num(ns[1].value);
+      const tot = cant * pu; s += tot;
+      const td = tr.querySelector('.td-total');
+      if (td) td.textContent = fmt(tot);
+    }
+  });
+  return s;
+}
+
+function sumMdoSection() {
+  let s = 0;
+  document.querySelectorAll('#body_mdo tr').forEach(tr => {
+    const ns = tr.querySelectorAll('input[type="number"]');
+    if (ns.length >= 3) {
+      const dias = num(ns[0].value);
+      const precio = num(ns[1].value);
+      const cant = num(ns[2].value) || 1;
+      const tot = dias * precio * cant;
+      s += tot;
+      const td = tr.querySelector('.td-total');
+      if (td) td.textContent = fmt(tot);
+    }
+  });
+  return s;
+}
+
+function sumInsumos() {
+  return num(document.getElementById('ins1').value)
+       + num(document.getElementById('ins2').value)
+       + num(document.getElementById('ins3').value);
+}
+
+/* ─── RECALC TOTAL ─── */
+function recalcAll() {
+  // Secciones simples
+  const sTablero = sumSimpleSection('body_tablero');
+  const sArtef   = sumSimpleSection('body_artef');
+  const sPat     = sumSimpleSection('body_pat');
+  const sEmp     = sumSimpleSection('body_emp');
+  const sCanal   = sumCanalSection();
+  const sCond    = sumCondSection();
+  const sMdo     = sumMdoSection();
+  const sIns     = sumInsumos();
+
+  // insumos live display
+  document.getElementById('ins1_val').textContent = fmt(num(document.getElementById('ins1').value));
+  document.getElementById('ins2_val').textContent = fmt(num(document.getElementById('ins2').value));
+  document.getElementById('ins3_val').textContent = fmt(num(document.getElementById('ins3').value));
+
+  // subtotales en encabezados
+  document.getElementById('sub_tablero').textContent = fmt(sTablero);
+  document.getElementById('sub_canal').textContent   = fmt(sCanal);
+  document.getElementById('sub_cond').textContent    = fmt(sCond);
+  document.getElementById('sub_artef').textContent   = fmt(sArtef);
+  document.getElementById('sub_pat').textContent     = fmt(sPat);
+  document.getElementById('sub_emp').textContent     = fmt(sEmp);
+  document.getElementById('sub_mdo').textContent     = fmt(sMdo);
+  document.getElementById('sub_ins').textContent     = fmt(sIns);
+
+  // resumen derecha
+  document.getElementById('r_tablero').textContent = fmt(sTablero);
+  document.getElementById('r_canal').textContent   = fmt(sCanal);
+  document.getElementById('r_cond').textContent    = fmt(sCond);
+  document.getElementById('r_artef').textContent   = fmt(sArtef);
+  document.getElementById('r_pat').textContent     = fmt(sPat);
+  document.getElementById('r_emp').textContent     = fmt(sEmp);
+  document.getElementById('r_mdo').textContent     = fmt(sMdo);
+  document.getElementById('r_ins').textContent     = fmt(sIns);
+
+  const matTotal = sTablero + sCanal + sCond + sArtef + sPat + sEmp;
+  const neto     = matTotal + sMdo + sIns;
+  document.getElementById('r_neto').textContent = fmt(neto);
+
+  const applyIva = document.getElementById('ivaToggle').checked;
+  const iva = applyIva ? neto * 0.19 : 0;
+  const total = neto + iva;
+
+  document.getElementById('ivaLine').style.display = applyIva ? 'flex' : 'none';
+  document.getElementById('r_iva').textContent = fmt(iva);
+  document.getElementById('r_total').textContent = fmt(total);
+
+  // barras distribución
+  if (neto > 0) {
+    const pctMat = Math.round(matTotal/neto*100);
+    const pctMdo = Math.round(sMdo/neto*100);
+    const pctIns = 100 - pctMat - pctMdo;
+    document.getElementById('pct_mat').textContent = pctMat + '%';
+    document.getElementById('pct_mdo').textContent = pctMdo + '%';
+    document.getElementById('pct_ins').textContent = pctIns + '%';
+    document.getElementById('bf_mat').style.width = pctMat + '%';
+    document.getElementById('bf_mdo').style.width = pctMdo + '%';
+    document.getElementById('bf_ins').style.width = Math.max(0,pctIns) + '%';
+  }
+
+  // condiciones pago
+  const pct = num(document.getElementById('pagoInicio').value);
+  const anticipo = total * pct / 100;
+  const entrega  = total * (100-pct) / 100;
+  document.getElementById('ci_anticipo').textContent = pct + '% — ' + fmt(anticipo);
+  document.getElementById('ci_entrega').textContent  = (100-pct) + '% — ' + fmt(entrega);
+}
+
+/* ─── RESET ─── */
+function resetAll() {
+  if (!confirm('¿Limpiar toda la cotización?')) return;
+  ['body_tablero','body_canal','body_cond','body_artef',
+   'body_pat','body_emp','body_mdo'].forEach(id => {
+    document.getElementById(id).innerHTML = '';
+  });
+  document.getElementById('ins1').value = 0;
+  document.getElementById('ins2').value = 0;
+  document.getElementById('ins3').value = 0;
+  recalcAll();
+}
+
+/* ─── CARGAR VALORES DE REFERENCIA (documento IDL-120-2026) ─── */
+function loadDefaults() {
+  // Limpiar
+  ['body_tablero','body_canal','body_cond','body_artef',
+   'body_pat','body_emp','body_mdo'].forEach(id => {
+    document.getElementById(id).innerHTML = '';
+  });
+
+  // Datos proyecto
+  document.getElementById('mandante').value  = 'Sra. Marlis Osorio Mödinger';
+  document.getElementById('direccion').value = '8 Norte N°647 Casa 3, Viña del Mar';
+  document.getElementById('sistema').value   = 'Canaleta DLP sobrepuesta';
+  document.getElementById('superficie').value= '250 m² — 2 pisos';
+  document.getElementById('empalme').value   = 'Tipo A9 / 8,8 kW / 40 A';
+  document.getElementById('operarios').value = '3 personas';
+
+  // Tablero
+  const bt = document.getElementById('body_tablero');
+  [
+    ['Tablero plástico 24 módulos IP55', 1, 'SAIME/MEC', 85000],
+    ['Interruptor diferencial 2×40 A / 30 mA', 1, 'Legrand/SAIME', 38000],
+    ['Interruptor diferencial 2×25 A / 30 mA', 3, 'Legrand/SAIME', 30000],
+    ['Termomagnético 2×16 A (enchufes)', 6, 'Legrand/SAIME', 12000],
+    ['Termomagnético 1×10 A (alumbrado)', 3, 'Legrand/SAIME', 8500],
+    ['Interruptor general 2×40 A', 1, 'Legrand/SAIME', 28000],
+    ['Luz piloto para riel', 1, '', 5000],
+    ['Borneras, identificadores, terminales', 1, '—', 18000],
+  ].forEach(r => bt.appendChild(makeSimpleRow('tablero', r[0], r[1], r[2], r[3])));
+
+  // Canalizaciones
+  const bc = document.getElementById('body_canal');
+  [
+    ['Canaleta DLP 40×16 mm (living, pasillo, cocina)', 100, 'm', 'Libre halóg.', 4500],
+    ['Canaleta DLP 30×12 mm (dormitorios, baños)', 60, 'm', 'Libre halóg.', 3800],
+    ['Canaleta DLP 20×12 mm (alumbrado fino)', 30, 'm', 'Libre halóg.', 2800],
+    ['Tubo EMT 20 mm', 13, 'm', 'Metálico', 5200],
+    ['Accesorios DLP (ángulos, T, derivaciones, tapas)', 1, 'jgo', '—', 80000],
+    ['Fijaciones (tarugos, tornillos, brocas)', 1, 'jgo', '—', 18000],
+  ].forEach(r => bc.appendChild(makeCanalRow(r[0], r[1], r[2], r[3], r[4])));
+
+  // Conductores
+  const bcd = document.getElementById('body_cond');
+  [
+    ['H07Z1-K 1,5 mm² — alumbrado (mín. SEC)', 250, 'm', 'COVISA/COCESA', 980],
+    ['H07Z1-K 2,5 mm² — enchufes', 350, 'm', 'COVISA/COCESA', 1450],
+    ['H07Z1-K 4 mm² — cocina / circuito especial', 40, 'm', 'COVISA/COCESA', 2200],
+    ['H07Z1-K 6 mm² — alimentador tablero', 20, 'm', 'COVISA/COCESA', 3500],
+    ['Cable tierra desnudo 6 mm² (PAT)', 15, 'm', '—', 2800],
+  ].forEach(r => bcd.appendChild(makeCondRow(r[0], r[1], r[2], r[3], r[4])));
+
+  // Artefactos
+  const ba = document.getElementById('body_artef');
+  [
+    ['Tomacorriente simple-doble 10 A con tierra', 23, 'BTICINO M.', 5000],
+    ['Tomacorriente simple-doble 16 A con tierra', 3, 'BTICINO M.', 8000],
+    ['Tomacorriente externo 10/16 A con tierra (Hydrobox)', 3, '—', 10000],
+    ['Interruptor (9/24 – 9/15 – 9/12)', 19, 'BTICINO M.', 6000],
+    ['Plafones (24–18 W / Frío–neutro–cálido)', 18, '—', 10000],
+    ['Luminarias exteriores (focos 30 W)', 4, '—', 12000],
+    ['Caja distribución 503 M / 503 TN', 20, '—', 2800],
+    ['Caja estanca 100×100 mm (exteriores)', 8, '—', 3500],
+    ['Caja metálica 100×100×65 + accesorios', 2, '—', 10000],
+    ['Placa de madera empalme 25 mm', 1, '—', 12000],
+  ].forEach(r => ba.appendChild(makeSimpleRow('artef', r[0], r[1], r[2], r[3])));
+
+  // PAT + trámites
+  const bp = document.getElementById('body_pat');
+  [
+    ['Varilla cooperweld 5/8"×1,80 m', 2, '—', 18000],
+    ['Conector Cadweld XB-TA (fusión termoquímica)', 4, 'EETT §4.2', 9500],
+    ['Medición resistividad terreno (geo eléctrico)', 1, 'EETT §5.1', 55000],
+    ['Planos AS BUILT + TE-1 SEC (digital + impreso)', 1, 'EETT §6', 120000],
+    ['Registro y visación SEC', 1, 'EETT §3', 85000],
+    ['Pruebas finales (PAT, aislamiento, continuidad)', 1, 'EETT §5', 45000],
+  ].forEach(r => bp.appendChild(makeSimpleRow('pat', r[0], r[1], r[2], r[3])));
+
+  // Gestión empalme
+  const be = document.getElementById('body_emp');
+  [
+    ['Tramitación y gestión solicitud empalme (formularios, derechos, coordinación)', 1, 'CGE/Chilquinta', 120000],
+    ['Materiales empalme (caja medidor, sellos, acometida, caja SEC normalizada)', 1, 'SEC aprobado', 160000],
+    ['Mano de obra instalación empalme y normalización', 1, 'Lic. clase B', 100000],
+  ].forEach(r => be.appendChild(makeSimpleRow('emp', r[0], r[1], r[2], r[3])));
+
+  // Mano de obra
+  const bm = document.getElementById('body_mdo');
+  [
+    ['Instalador eléctrico lic. clase B (jefe cuadrilla)', 15, '15 días hábiles', 55000, 1],
+    ['Ayudante eléctrico calificado', 15, '15 días c/u', 38000, 2],
+    ['Retiro y desmontaje instalación eléctrica antigua', 2, '3 pers. × 2 días', 40000, 3],
+  ].forEach(r => bm.appendChild(makeMdoRow(r[0], r[1], r[2], r[3], r[4])));
+
+  // Insumos
+  document.getElementById('ins1').value = 200000;
+  document.getElementById('ins2').value = 150000;
+  document.getElementById('ins3').value = 163500;
+
+  recalcAll();
+}
+
+/* ─── INIT ─── */
+window.onload = () => {
+  // fecha hoy
+  const hoy = new Date().toISOString().split('T')[0];
+  document.getElementById('quoteDate').value = hoy;
+  loadDefaults();
+};
+</script>
+</body>
+</html>
